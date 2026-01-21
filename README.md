@@ -20,6 +20,11 @@ Test Specs:
 | Python | Multi-Head Attention | forward_matmul from ./src/python/attention.py | 1.521s | 1.472s | 
 | Python | Multi-Head Attention | torch.nn.functional.scaled_dot_product_attention | 0.941s | 0.901s | 
 
+### Note
+
+- Implementations are being tested against `torch.nn.functional.scaled_dot_product_attention` for accuracy.
+- Accuracy tests are in `src/python/scratch.ipynb` and are done using mean absolute error (MAE)  over randomly generated test data of size (100, 4, 2048, 768).
+
 ## Running 
 
 - [Install](https://docs.astral.sh/uv/#highlights) `uv` package manager. 
