@@ -1,0 +1,6 @@
+---
+num_iters: 100
+batch_size: 4
+sequence_length: 2048
+embedding_dims: 768
+num_heads: 12

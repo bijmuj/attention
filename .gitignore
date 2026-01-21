@@ -1,0 +1,4 @@
+__pycache__
+.venv
+src/python/__pycache__
+traces/*.json
