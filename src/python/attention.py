@@ -3,10 +3,14 @@ import enum
 import torch
 from torch import nn
 from torch.nn import functional as F
+from torch.nn.attention import SDPBackend, sdpa_kernel
 
 
 class ATTENTION_IMPLEMENTATIONS(enum.StrEnum):
-    TORCH = enum.auto()
+    SDP_MATH = enum.auto()
+    SDP_FLASH_ATTENTION = enum.auto()
+    SDP_EFFICIENT_ATTENTION = enum.auto()
+    SDP_DEFAULT = enum.auto()
     EINSUM = enum.auto()
     MATMUL = enum.auto()
 
@@ -64,10 +68,25 @@ class MultiHeadAttention(nn.Module):
 
         scale_factor = 1 / (self.attn_dims**0.5)
 
-        if self.attn_impl == ATTENTION_IMPLEMENTATIONS.TORCH:
+        if self.attn_impl == ATTENTION_IMPLEMENTATIONS.SDP_DEFAULT:
             attn_weight = F.scaled_dot_product_attention(
                 Q, K, V, dropout_p=self.dropout, scale=scale_factor
             )
+        elif self.attn_impl == ATTENTION_IMPLEMENTATIONS.SDP_MATH:
+            with sdpa_kernel(SDPBackend.MATH):
+                attn_weight = F.scaled_dot_product_attention(
+                    Q, K, V, dropout_p=self.dropout, scale=scale_factor
+                )
+        elif self.attn_impl == ATTENTION_IMPLEMENTATIONS.SDP_FLASH_ATTENTION:
+            with sdpa_kernel(SDPBackend.FLASH_ATTENTION):
+                attn_weight = F.scaled_dot_product_attention(
+                    Q, K, V, dropout_p=self.dropout, scale=scale_factor
+                )
+        elif self.attn_impl == ATTENTION_IMPLEMENTATIONS.SDP_EFFICIENT_ATTENTION:
+            with sdpa_kernel(SDPBackend.EFFICIENT_ATTENTION):
+                attn_weight = F.scaled_dot_product_attention(
+                    Q, K, V, dropout_p=self.dropout, scale=scale_factor
+                )
         elif self.attn_impl == ATTENTION_IMPLEMENTATIONS.EINSUM:
             attn_weight = forward_einsum(Q, K, V, self.dropout, scale_factor)
         elif self.attn_impl == ATTENTION_IMPLEMENTATIONS.MATMUL:
