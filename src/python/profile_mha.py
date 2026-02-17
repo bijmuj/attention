@@ -34,13 +34,13 @@ def parse_args():
         help="Flag to save torch profile as a .json trace. Defaults to False.",
     )
     parser.add_argument(
-        "--output_dir",
+        "--trace_dir",
         type=str,
         default="./traces",
         help="Directory to write output trace file in. Only written to if save_trace is set. Defaults to ./traces",
     )
     parser.add_argument(
-        "--output_file",
+        "--trace_file",
         type=str,
         default="trace.json",
         help="Name of output trace file. Only written to if `save_trace` is set. Defaults to trace.json.",

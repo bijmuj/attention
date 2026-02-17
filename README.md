@@ -45,13 +45,19 @@ Test Specs:
 - torch: 2.8.0
 
 | Language | Algorithm | Implementation | Datatype | CPU Time |  CUDA Time | 
-| --- | --- | --- | --- | --- | 
+| --- | --- | --- | --- | --- | --- | 
 | Python | Multi-Head Attention | forward_einsum from ./src/python/attention.py | float32 | 1.522s | 1.474s | 
 | Python | Multi-Head Attention | forward_matmul from ./src/python/attention.py | float32 | 1.521s | 1.472s | 
 | Python | Multi-Head Attention | torch SDP default backend | float32 | 0.941s | 0.901s | 
-| Python | Multi-Head Attention | torch SDP MATH backend | 1.861s | float32 | 1.797s | 
+| Python | Multi-Head Attention | torch SDP MATH backend | float32 | 1.861s | 1.797s | 
 | Python | Multi-Head Attention | torch SDP FLASH_ATTENTION backend | float32 | NA | NA | 
 | Python | Multi-Head Attention | torch SDP EFFICIENT_ATTENTION backend | float32 | 0.947s | 0.910s |
+| Python | Multi-Head Attention | forward_einsum from ./src/python/attention.py | bfloat16 | 0.740s | 0.653s | 
+| Python | Multi-Head Attention | forward_matmul from ./src/python/attention.py | bfloat16 | 0.739s | 0.657s | 
+| Python | Multi-Head Attention | torch SDP default backend | bfloat16 | 0.264s | 0.171s | 
+| Python | Multi-Head Attention | torch SDP MATH backend | bfloat16 | 2.007s | 1.879s | 
+| Python | Multi-Head Attention | torch SDP FLASH_ATTENTION backend | bfloat16 | 0.239s | 0.161s | 
+| Python | Multi-Head Attention | torch SDP EFFICIENT_ATTENTION backend | bfloat16 | 0.273s | 0.194s |
 
 ## TODO's
 
