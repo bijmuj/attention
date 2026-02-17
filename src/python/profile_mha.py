@@ -22,7 +22,7 @@ def parse_args():
     parser.add_argument(
         "--attn_impl",
         type=str,
-        default="torch",
+        default="sdp_default",
         choices=[e for e in ATTENTION_IMPLEMENTATIONS],
         help="Implementation to use for scaled dot product attention (softmax((QK^T)/scale_factor)V).",
     )
@@ -59,21 +59,29 @@ def main(args):
 
     device = torch.device("cuda")
 
-    X = torch.randn(
-        (
-            config["num_iters"],
-            config["batch_size"],
-            config["sequence_length"],
-            config["embedding_dims"],
+    X = (
+        torch.randn(
+            (
+                config["num_iters"],
+                config["batch_size"],
+                config["sequence_length"],
+                config["embedding_dims"],
+            )
         )
-    ).to(device)
+        .to(device)
+        .to(torch.bfloat16)
+    )
 
-    attention = MultiHeadAttention(
-        config["embedding_dims"],
-        attn_dims,
-        config["num_heads"],
-        attn_impl=args.attn_impl,
-    ).to(device)
+    attention = (
+        MultiHeadAttention(
+            config["embedding_dims"],
+            attn_dims,
+            config["num_heads"],
+            attn_impl=args.attn_impl,
+        )
+        .to(device)
+        .to(torch.bfloat16)
+    )
 
     activities = [tprof.ProfilerActivity.CPU, tprof.ProfilerActivity.CUDA]
 
